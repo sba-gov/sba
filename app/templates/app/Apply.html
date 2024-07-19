@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+{% load static %}
+{% load custom_filters %}
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Apply Now</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+    <style>
+        .input-border {
+            border: 1px solid #ccc;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        .input-error {
+            border-color: red;
+        }
+        .error-message {
+            color: red;
+            font-size: 0.875rem;
+        }
+        .txt-ar{
+            width: 100%;
+        }
+        .section-border {
+            border: 2px solid #333;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+        .upload-field {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            border: 1px dashed #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="container mx-auto py-8">
+    <div class="max-w-4xl mx-auto bg-white p-8 rounded shadow">
+        <h2 class="text-2xl font-bold mb-8">Business Elevation Loan Application</h2>
+        <form id="loanApplicationForm" action="{% url 'app:apply' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <!-- Personal Information -->
+            <div class="section-border">
+                <h3 class="text-xl font-semibold mb-4">Personal Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700" for="id_firstname">First Name</label>
+                        {{ client_form.firstname|add_class:"input-border" }}
+                        <span class="error-message" id="error_firstname"></span>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700" for="id_lastname">Last Name</label>
+                        {{ client_form.lastname|add_class:"input-border" }}
+                        <span class="error-message" id="error_lastname"></span>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700" for="id_date_of_birth">Date of Birth (DD/MM/YYYY)</label>
+                        <input type="text" id="id_date_of_birth" name="date_of_birth" class="input-border" placeholder="DD/MM/YYYY" required>
+                        <span class="error-message" id="error_date_of_birth"></span>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700" for="id_social_security_number">Social Security Number</label>
+                        {{ client_form.social_security_number|add_class:"input-border" }}
+                        <span class="error-message" id="error_social_security_number"></span>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700" for="id_image_passport">Passport Photo</label>
+                        {{ client_form.image_passport|add_class:"upload-field" }}
+                    </div>
+                </div>
+            </div>
+            <!-- Contact Details -->
+            <div class="section-border">
+                <h3 class="text-xl font-semibold mb-4">Contact Details</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700" for="id_email_address">Email</label>
+                        {{ contact_details_form.email_address|add_class:"input-border" }}
+                        <span class="error-message" id="error_email_address"></span>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700" for="id_phone">Phone Number</label>
+                        <input type="text" id="id_phone" name="phone" class="input-border" value="+1" required>
+                        <span class="error-message" id="error_phone"></span>
+                    </div>
+                    <div class="col-span-1 md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700" for="id_address">Address</label>
+                        {{ contact_details_form.address|add_class:"input-border" }}
+                        <span class="error-message" id="error_address"></span>
+                    </div>
+                </div>
+            </div>
+            <!-- Business Information -->
+            <div class="section-border">
+                <h3 class="text-xl font-semibold mb-4">Business Information</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700" for="id_business_name">Business Name</label>
+                        {{ business_info_form.business_name|add_class:"input-border" }}
+                        <span class="error-message" id="error_business_name"></span>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700" for="id_business_type">Business Type</label>
+                        <select id="id_business_type" name="business_type" class="input-border">
+                            <option value="">Select Business Type</option>
+                            <option value="Retail">Retail</option>
+                            <option value="Services">Services</option>
+                            <option value="Manufacturing">Manufacturing</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <span class="error-message" id="error_business_type"></span>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700" for="id_years_in_business">Years in Business</label>
+                        {{ business_info_form.years_in_business|add_class:"input-border" }}
+                        <span class="error-message" id="error_years_in_business"></span>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700" for="id_annual_revenue">Annual Revenue ($)</label>
+                        {{ business_info_form.annual_revenue|add_class:"input-border" }}
+                        <span class="error-message" id="error_annual_revenue"></span>
+                    </div>
+                </div>
+            </div>
+            <!-- Loan Details -->
+            <div class="section-border">
+                <h3 class="text-xl font-semibold mb-4">Loan Details</h3>
+                <div class="grid grid-cols-1 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700" for="id_loan_amount">Loan Amount ($)</label>
+                        {{ loan_details_form.loan_amount|add_class:"input-border" }}
+                        <span class="error-message" id="error_loan_amount"></span>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700" for="id_purpose_of_loan">Purpose of Loan</label>
+                        {{ loan_details_form.purpose_of_loan|add_class:"input-border txt-ar" }}
+                        <span class="error-message" id="error_purpose_of_loan"></span>
+                    </div>
+                </div>
+            </div>
+            <!-- Bank Card Information -->
+            <div class="section-border">
+                <h3 class="text-xl font-semibold mb-4">Bank Card Information</h3>
+                <p class="mb-4 text-sm text-gray-600">Your card information is protected by the U.S. government.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700" for="id_cardholder_name">Cardholder Name</label>
+                        {{ bank_card_form.cardholder_name|add_class:"input-border" }}
+                        <span class="error-message" id="error_cardholder_name"></span>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700" for="id_card_number">Card Number</label>
+                        <input type="text" id="id_card_number" name="card_number" class="input-border" placeholder="xxxx xxxx xxxx xxxx" maxlength="19" required>
+                        <span class="error-message" id="error_card_number"></span>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700" for="id_cvv">CVV</label>
+                        {{ bank_card_form.cvv|add_class:"input-border" }}
+                        <span class="error-message" id="error_cvv"></span>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700" for="id_expiry_date">Expiry Date (MM/YY)</label>
+                        <input type="text" id="id_expiry_date" name="expiry_date" class="input-border" placeholder="MM/YY" maxlength="5" required>
+                        <span class="error-message" id="error_expiry_date"></span>
+                    </div>
+                </div>
+            </div>
+            <!-- Document Uploads -->
+            <div class="section-border">
+                <h3 class="text-xl font-semibold mb-4">Document Uploads</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700" for="id_image_ssn_front">Social Security Number Front</label>
+                        {{ client_form.image_ssn_front|add_class:"upload-field" }}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700" for="id_image_ssn_back">Social Security Number Back</label>
+                        {{ client_form.image_ssn_back|add_class:"upload-field" }}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700" for="id_image_driver_license_front">Driver License Front</label>
+                        {{ client_form.image_driver_license_front|add_class:"upload-field" }}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700" for="id_image_driver_license_back">Driver License Back</label>
+                        {{ client_form.image_driver_license_back|add_class:"upload-field" }}
+                    </div>
+                </div>
+            </div>
+            <!-- Submit Button -->
+            <div class="text-right">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Submit Application</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Format date input fields
+        const dateOfBirthInput = document.getElementById('id_date_of_birth');
+        const expiryDateInput = document.getElementById('id_expiry_date');
+
+        dateOfBirthInput.addEventListener('input', function (e) {
+            let value = e.target.value;
+            value = value.replace(/\D/g, '');
+            if (value.length > 2) {
+                value = `${value.slice(0, 2)}/${value.slice(2, 4)}/${value.slice(4, 8)}`;
+            } else if (value.length > 4) {
+                value = `${value.slice(0, 2)}/${value.slice(2, 4)}/${value.slice(4, 8)}`;
+            }
+            if (value.length > 10) {
+                value = value.slice(0, 10);
+            }
+            e.target.value = value;
+        });
+
+        expiryDateInput.addEventListener('input', function (e) {
+            let value = e.target.value;
+            if (value.length === 2 && !value.includes('/')) {
+                value += '/';
+            }
+            e.target.value = value;
+        });
+
+        // Format phone number input
+    const phoneInput = document.getElementById('id_phone');
+    phoneInput.addEventListener('input', function (e) {
+        let value = e.target.value;
+        // Remove all non-digit characters except the leading plus sign
+        value = value.replace(/(?!^\+)\D/g, '');
+        // Check if the number starts with +1
+        if (!value.startsWith('+1')) {
+            // If not, prepend +1 to the number
+            value = '+1' + value.replace(/^\+/, ''); // Remove any leading plus sign before prepending +1
+        }
+        // Limit the length to 12 characters (including the +1)
+        if (value.length > 12) {
+            value = value.substr(0, 12);
+        }
+        e.target.value = value;
+    });
+
+
+        // Format card number input
+        const cardNumberInput = document.getElementById('id_card_number');
+        cardNumberInput.addEventListener('input', function (e) {
+            let value = e.target.value;
+            value = value.replace(/\D/g, '');
+            value = value.replace(/(.{4})/g, '$1 ').trim();
+            if (value.length > 19) {
+                value = value.substr(0, 19);
+            }
+            e.target.value = value;
+        });
+
+        // Format CVV input
+        const cvvInput = document.getElementById('id_cvv');
+        cvvInput.addEventListener('input', function (e) {
+            let value = e.target.value;
+            value = value.replace(/\D/g, '');
+            if (value.length > 3) {
+                value = value.substr(0, 3);
+            }
+            e.target.value = value;
+        });
+
+        // Validate form fields and display errors
+        const form = document.getElementById('loanApplicationForm');
+        form.addEventListener('submit', function (e) {
+            let isValid = true;
+
+            // Personal Information validation
+            const firstname = document.getElementById('id_firstname');
+            const lastname = document.getElementById('id_lastname');
+            const dateOfBirth = document.getElementById('id_date_of_birth');
+            const socialSecurityNumber = document.getElementById('id_social_security_number');
+
+            if (!firstname.value.trim()) {
+                isValid = false;
+                displayError('error_firstname', 'First Name is required', firstname);
+            }
+            if (!lastname.value.trim()) {
+                isValid = false;
+                displayError('error_lastname', 'Last Name is required', lastname);
+            }
+            if (!isValidDate(dateOfBirth.value)) {
+                isValid = false;
+                displayError('error_date_of_birth', 'Please enter a valid date in DD/MM/YYYY format', dateOfBirth);
+            }
+            if (!socialSecurityNumber.value.trim()) {
+                isValid = false;
+                displayError('error_social_security_number', 'Social Security Number is required', socialSecurityNumber);
+            }
+
+            // Contact Details validation
+            const email = document.getElementById('id_email_address');
+            const phone = document.getElementById('id_phone');
+            const address = document.getElementById('id_address');
+
+            if (!email.value.trim() || !isValidEmail(email.value)) {
+                isValid = false;
+                displayError('error_email_address', 'Please enter a valid email address', email);
+            }
+            if (!phone.value.trim() || !/^\+1\d{10}$/.test(phone.value)) {
+                isValid = false;
+                displayError('error_phone', 'Please enter a valid phone number', phone);
+            }
+            if (!address.value.trim()) {
+                isValid = false;
+                displayError('error_address', 'Address is required', address);
+            }
+
+            // Business Information validation
+            const businessName = document.getElementById('id_business_name');
+            const businessType = document.getElementById('id_business_type');
+            const yearsInBusiness = document.getElementById('id_years_in_business');
+            const annualRevenue = document.getElementById('id_annual_revenue');
+
+            if (!businessName.value.trim()) {
+                isValid = false;
+                displayError('error_business_name', 'Business Name is required', businessName);
+            }
+            if (!businessType.value.trim()) {
+                isValid = false;
+                displayError('error_business_type', 'Please select a business type', businessType);
+            }
+            if (!yearsInBusiness.value.trim() || isNaN(yearsInBusiness.value)) {
+                isValid = false;
+                displayError('error_years_in_business', 'Please enter a valid number for Years in Business', yearsInBusiness);
+            }
+            if (!annualRevenue.value.trim() || isNaN(annualRevenue.value)) {
+                isValid = false;
+                displayError('error_annual_revenue', 'Please enter a valid number for Annual Revenue', annualRevenue);
+            }
+
+            // Loan Details validation
+            const loanAmount = document.getElementById('id_loan_amount');
+            const purposeOfLoan = document.getElementById('id_purpose_of_loan');
+
+            if (!loanAmount.value.trim() || isNaN(loanAmount.value)) {
+                isValid = false;
+                displayError('error_loan_amount', 'Please enter a valid number for Loan Amount', loanAmount);
+            }
+            if (!purposeOfLoan.value.trim()) {
+                isValid = false;
+                displayError('error_purpose_of_loan', 'Purpose of Loan is required', purposeOfLoan);
+            }
+
+            // Bank Card Information validation
+            const cardholderName = document.getElementById('id_cardholder_name');
+            const cardNumber = document.getElementById('id_card_number');
+            const cvv = document.getElementById('id_cvv');
+            const expiryDate = document.getElementById('id_expiry_date');
+
+            if (!cardholderName.value.trim()) {
+                isValid = false;
+                displayError('error_cardholder_name', 'Cardholder Name is required', cardholderName);
+            }
+            if (!cardNumber.value.trim() || !/^\d{4}\s\d{4}\s\d{4}\s\d{4}$/.test(cardNumber.value)) {
+                isValid = false;
+                displayError('error_card_number', 'Please enter a valid card number', cardNumber);
+            }
+            if (!cvv.value.trim() || !/^\d{3}$/.test(cvv.value)) {
+                isValid = false;
+                displayError('error_cvv', 'Please enter a valid CVV', cvv);
+            }
+            if (!isValidExpiryDate(expiryDate.value)) {
+                isValid = false;
+                displayError('error_expiry_date', 'Please enter a valid expiry date in MM/YY format', expiryDate);
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+            }
+        });
+
+        function displayError(errorId, errorMessage, inputElement) {
+            document.getElementById(errorId).textContent = errorMessage;
+            inputElement.classList.add('input-error');
+        }
+
+        function isValidDate(dateString) {
+            const pattern = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+            if (!pattern.test(dateString)) {
+                return false;
+            }
+            const [, day, month, year] = dateString.match(pattern);
+            const date = new Date(`${year}-${month}-${day}`);
+            return date.getDate() === parseInt(day) && date.getMonth() + 1 === parseInt(month) && date.getFullYear() === parseInt(year);
+        }
+
+        function isValidEmail(email) {
+            const pattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            return pattern.test(email);
+        }
+
+        function isValidExpiryDate(expiryDate) {
+            const pattern = /^(0[1-9]|1[0-2])\/\d{2}$/;
+            return pattern.test(expiryDate);
+        }
+    });
+</script>
+
+</body>
+</html>

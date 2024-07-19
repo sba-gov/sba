@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+{% load static %}
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sign In</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+</head>
+<body style="background-image: url({% static 'money-1017463_1920.jpg' %});">
+<div class="w-screen flex flex-col justify-center items-center">
+<div class="flex flex-col justify-center items-center" style="margin-top: 50px; ">
+<h4 class="w-full text-5xl">Oops!  You Haven't Applied For A loan Yet </h4>
+<p class="text-3xl" style="margin-top: 30px;  margin-bottom: 20px; ">To Apply Click The Link Below</p>
+</div>
+<div class="bg-blue-900 bg-opacity-75 p-6 text-center text-white">
+<h2 class="text-xl font-bold mb-4">Need funding for your small business?</h2>
+<button class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded"><a href="{% url 'app:apply' %}"> For Your Business Loan Now</a></button>
+</div>
+</div>
+</body>
+</html>
